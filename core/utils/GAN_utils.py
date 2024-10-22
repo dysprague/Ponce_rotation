@@ -24,7 +24,8 @@ if platform == "linux":  # CHPC cluster
     elif "ris.wustl.edu" in hostname:
         homedir = os.path.expanduser('~')
         netsdir = os.path.join(homedir, 'Generate_DB/nets')
-    load_urls = True
+    netsdir = '/n/home09/dsprague/model/GAN'
+    #load_urls = True
     # ckpt_path = {"vgg16": "/scratch/binxu/torch/vgg16-397923af.pth"}
 else:
     if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
@@ -164,10 +165,10 @@ class upconvGAN(nn.Module):
             if load_urls:
                 SDnew = load_statedict_from_online(name)
             else:
-                savepath = {"fc6": join(netsdir, r"upconv/fc6/generator_state_dict.pt"),
-                            "fc7": join(netsdir, r"upconv/fc7/generator_state_dict.pt"),
-                            "fc8": join(netsdir, r"upconv/fc8/generator_state_dict.pt"),
-                            "pool5": join(netsdir, r"upconv/pool5/generator_state_dict.pt")}
+                savepath = {"fc6": join(netsdir, r"upconv/upconvGAN_fc6.pt"),
+                            "fc7": join(netsdir, r"upconv/upconvGAN_fc7.pt"),
+                            "fc8": join(netsdir, r"upconv/upconvGAN_fc8.pt"),
+                            "pool5": join(netsdir, r"upconv/upconvGAN_pool5.pt")}
                 SD = torch.load(savepath[name])
                 SDnew = OrderedDict()
                 for name, W in SD.items():  # discard this inconsistency
