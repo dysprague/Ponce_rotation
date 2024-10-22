@@ -30,7 +30,6 @@ dependencies:
   - filelock=3.9.0
   - freetype=2.12.1
   - giflib=5.2.1
-  - icc_rt=2022.1.0
   - idna=3.4
   - intel-openmp=2021.4.0
   - jinja2=3.1.2
