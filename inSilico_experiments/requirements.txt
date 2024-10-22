@@ -1,0 +1,14 @@
+jupyter
+ipympl
+numpy
+pandas
+matplotlib
+colorspacious
+xarray
+flammkuchen
+PyPortfolioOpt
+scipy
+scikit-learn
+timm
+easydict
+h5py

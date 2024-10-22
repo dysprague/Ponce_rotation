@@ -1,0 +1,2 @@
+--net alexnet --layers .features.ReLU1 --layers_short ReLU1 --reps 10 --steps 50 --noise no-noise
+--net alexnet --layers .features.ReLU1 --layers_short ReLU1 --reps 10 --steps 50 --noise noise
