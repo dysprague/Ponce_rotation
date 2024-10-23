@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=kempner
 #SBATCH --time=0-03:00
-#SBATCH --account=kempner_grads
 #SBATCH --gres=gpu:1
 #SBATCH --mem=256G
 #SBATCH --cpus-per-task=16
