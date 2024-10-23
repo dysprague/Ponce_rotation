@@ -7,22 +7,14 @@ import numpy as np
 import torch
 import time
 
-
-
 parser = ArgumentParser()
 parser.add_argument("--gan_name", type=str, default="fc6", help="GAN model name")
-parser.add_argument("--folder_name", type=str, default="monkey", help="name of the folder with the image batch files")
+parser.add_argument("--folder_name", type=str, default="monkey_grooming", help="name of the folder with the image batch files")
 parser.add_argument("--max_iter", type=int, default=int(5E5), help="Number gradient descent iterations")
-parser.add_argument("--batch_num", type=int, default=1, help="batch number to process")
 
-if sys.platform == "linux":
-    save_data_main_root = r"/n/scratch/users/a/ala2226/gan_inversion_results_fc6"
-    data_root = r"/n/scratch/users/a/ala2226/gan_inversion_data"
-    sys.path.append(r"/home/ala2226/Cosine-Project") 
-else:
-    save_data_main_root = r"C:\Users\Alireza\OneDrive - Harvard University\Documents\cosine_preprocess_data\gan_inversion\results"
-    data_root = r"C:\Users\Alireza\OneDrive - Harvard University\Documents\cosine_preprocess_data\gan_inversion\data"
-    sys.path.append(r"C:\Users\Alireza\Documents\Git\Cosine-Project")
+save_data_main_root = r"/n/home09/dsprague/data/videos_inverted"
+data_root = r"/n/home09/dsprague/data/video_frames"
+sys.path.append(r"/n/home09/dsprague/Ponce_rotation")
 
 os.makedirs(save_data_main_root, exist_ok=True)
 
@@ -35,14 +27,13 @@ if __name__=="__main__":
     from core.utils.GAN_utils import loadBigGAN, BigGAN_wrapper
     from core.utils.GAN_invert_utils import *
     from core.utils.GAN_utils import upconvGAN
-    from pytorch_pretrained_biggan import truncated_noise_sample
+
 
     # let parse the arguments
     args = parser.parse_args() 
     gan_name = args.gan_name
     folder_name = args.folder_name
     max_iter = int(args.max_iter)
-    batch_num = args.batch_num
 
     # load the GAN model
     if gan_name == 'BigGAN':
@@ -58,7 +49,7 @@ if __name__=="__main__":
         raise ValueError("The GAN model name is not recognized")
     
     # load the image batch
-    img_batch_path = os.path.join(data_root, folder_name, f"batch_{batch_num}")
+    img_batch_path = os.path.join(data_root, folder_name)
     ref_img_nms, ref_img_tsr = load_ref_imgs(
         imgdir=img_batch_path, preprocess_type='center_crop', image_size=256)
     
@@ -74,7 +65,7 @@ if __name__=="__main__":
         raise ValueError("The GAN model name is not recognized")
     
     # let save the inverted images and the codes and the reference images
-    save_dir = os.path.join(save_data_main_root, folder_name, f"batch_{batch_num}")
+    save_dir = os.path.join(save_data_main_root, folder_name)
     os.makedirs(save_dir, exist_ok=True)
     img_format = "png"
     for imgid, imgs in enumerate(ref_img_tsr):
@@ -91,7 +82,7 @@ if __name__=="__main__":
     t_end = time.time()
     t_took_sec = t_end - t_save
     t_took_min = t_took_sec / 60
-    print(f"batch {batch_num} is processed and saved. everything took {t_took_min} minutes")
+    print(f"Video {folder_name} is processed and saved. everything took {t_took_min} minutes")
 
 
     

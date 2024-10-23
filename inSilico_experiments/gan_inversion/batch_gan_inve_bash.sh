@@ -1,39 +1,37 @@
 #!/bin/bash
-#SBATCH -n 1
-#SBATCH -p gpu_quad
-#SBATCH -t 4:00:00
+#SBATCH --partition kempner
+#SBATCH --time=0-05:00
 #SBATCH --gres=gpu:1
-#SBATCH --mem=6G
-#SBATCH --array=1-12
-#SBATCH --mail-user=alireza@hms.harvard.edu
-#SBATCH -o gan_inve_%A_%a.out
+#SBATCH --mem=256G
+#SBATCH --cpus-per-task=16
+#SBATCH --gpus-per-node=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --array=1-10 # change for batches
+#SBATCH --mail-user=daniel_sprague@fas.harvard.edu
+#SBATCH --output=my_job_output.out
 
 echo "$SLURM_ARRAY_TASK_ID"
 
 param_list=\
-'--folder_name monkey --batch_num 1
---folder_name monkey --batch_num 2
---folder_name monkey --batch_num 3
---folder_name monkey --batch_num 4
---folder_name monkey --batch_num 5
---folder_name monkey --batch_num 6
---folder_name non_monkey --batch_num 1
---folder_name non_monkey --batch_num 2
---folder_name non_monkey --batch_num 3
---folder_name non_monkey --batch_num 4
---folder_name non_monkey --batch_num 5
---folder_name non_monkey --batch_num 6
+'--folder_name ambulance
+--folder_name cats_jumping
+--folder_name fan
+--folder_name horses 
+--folder_name komodo 
+--folder_name macaque_eating 
+--folder_name macaque_running 
+--folder_name macaque_fighting
+--folder_name monkey_grooming 
+--folder_name soccer_ball
 '
 
 export unit_name="$(echo "$param_list" | head -n $SLURM_ARRAY_TASK_ID | tail -1)"
 echo "$unit_name"
 
+module load python
 
-module load gcc/9.2.0
-module load cuda/11.7
-module load miniconda3/4.10.3
+source activate ponce
 
-source activate cosine-project-O2
-
-cd ~/Cosine-Project/inSilico_experiments/gan_invertion
+cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
 python3 batch_gan_inversion.py $unit_name
