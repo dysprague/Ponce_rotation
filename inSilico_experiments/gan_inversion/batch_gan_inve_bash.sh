@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=kempner
-#SBATCH --time=3:00
+#SBATCH --time=0-03:00
+#SBATCH --account=kempner_grads
 #SBATCH --gres=gpu:1
 #SBATCH --mem=256G
 #SBATCH --cpus-per-task=16
@@ -10,8 +11,6 @@
 #SBATCH --array=1-10 # change for batches
 #SBATCH --mail-user=daniel_sprague@fas.harvard.edu
 #SBATCH --output=my_job_output.out
-
-echo "$SLURM_ARRAY_TASK_ID"
 
 param_list=\
 '--folder_name ambulance
@@ -25,9 +24,6 @@ param_list=\
 --folder_name monkey_grooming 
 --folder_name soccer_ball
 '
-
-export unit_name="$(echo "$param_list" | head -n $SLURM_ARRAY_TASK_ID | tail -1)"
-echo "$unit_name"
 
 module load python
 
