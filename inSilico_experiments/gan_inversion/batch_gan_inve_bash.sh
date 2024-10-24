@@ -7,27 +7,27 @@
 #SBATCH --gpus-per-node=1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-10 # change for batches
+#SBATCH --array=0-9 # change for batches
 #SBATCH --mail-user=daniel_sprague@fas.harvard.edu
-#SBATCH --output=my_job_output.out
-#SBATCH --error=my_job_error.err
+#SBATCH --output=gan_inve_%A_%a.out
+#SBATCH --error=gan_inve_%A_%a.err
 
-param_list=\
-'--folder_name ambulance
---folder_name cats_jumping
---folder_name fan
---folder_name horses 
---folder_name komodo 
---folder_name macaque_eating 
---folder_name macaque_running 
---folder_name macaque_fighting
---folder_name monkey_grooming 
---folder_name soccer_ball
-'
+#param_list=\
+#'--folder_name ambulance
+#--folder_name cats_jumping
+#--folder_name fan
+#--folder_name horses 
+#--folder_name komodo 
+#--folder_name macaque_eating 
+#--folder_name macaque_running 
+#--folder_name macaque_fighting
+#--folder_name monkey_grooming 
+#--folder_name soccer_ball
+#'
 
 module load python
 
-source activate ponce
+source activate ponce_rotation
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
-python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID
+python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 

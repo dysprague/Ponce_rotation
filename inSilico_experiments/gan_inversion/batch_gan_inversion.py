@@ -9,14 +9,17 @@ import time
 
 parser = ArgumentParser()
 parser.add_argument("--gan_name", type=str, default="fc6", help="GAN model name")
-parser.add_argument("--folder_name", type=str, default="monkey_grooming", help="name of the folder with the image batch files")
+#parser.add_argument("--folder_name", type=str, default="monkey_grooming", help="name of the folder with the image batch files")
 parser.add_argument("--max_iter", type=int, default=int(5E5), help="Number gradient descent iterations")
+parser.add_argument("--task_id", type=int, default=0, help="task id number")
 
 save_data_main_root = r"/n/home09/dsprague/data/videos_inverted"
 data_root = r"/n/home09/dsprague/data/video_frames"
 sys.path.append(r"/n/home09/dsprague/Ponce_rotation")
 
 os.makedirs(save_data_main_root, exist_ok=True)
+
+folders = ['ambulance', 'cats_jumping', 'fan', 'horses', 'komodo', 'macaque_eating', 'macaque_running', 'macaque_fighting', 'monkey_grooming', 'soccer_ball']
 
 if __name__=="__main__":
     # let get log of the time
@@ -32,7 +35,8 @@ if __name__=="__main__":
     # let parse the arguments
     args = parser.parse_args() 
     gan_name = args.gan_name
-    folder_name = args.folder_name
+    task_id = args.task_id
+    folder_name = folders[task_id]
     max_iter = int(args.max_iter)
 
     # load the GAN model
