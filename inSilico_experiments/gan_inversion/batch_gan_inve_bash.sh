@@ -26,8 +26,10 @@
 #'
 
 module load python
+module load cuda
+module load mamba
 
-source activate ponce_rotation
+mamba activate ponce_rotation
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
 python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 
