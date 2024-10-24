@@ -9,8 +9,8 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --array=0-9 # change for batches
 #SBATCH --mail-user=daniel_sprague@fas.harvard.edu
-#SBATCH --output=gan_inve_%A_%a.out
-#SBATCH --error=gan_inve_%A_%a.err
+#SBATCH --output=gan_inve_%a.out
+#SBATCH --error=gan_inve_%a.err
 
 #param_list=\
 #'--folder_name ambulance
@@ -27,9 +27,10 @@
 
 module load python
 module load cuda
-module load mamba
 
-mamba activate ponce_rotation
+source /n/home09/dsprague/.conda/envs/ponce_rotation
+
+conda activate ponce_rotation
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
 python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 
