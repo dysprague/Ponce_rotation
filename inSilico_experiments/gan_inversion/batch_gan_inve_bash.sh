@@ -25,9 +25,6 @@
 #--folder_name soccer_ball
 #'
 
-module load python
-module load cuda
-
 source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/mamba.sh
 
 mamba activate ponce_rotation
