@@ -25,9 +25,12 @@
 #--folder_name soccer_ball
 #'
 
-source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/mamba.sh
+source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/conda.sh
 
-mamba activate ponce_rotation
+conda activate ponce_rotation
+
+echo "installed packages:"
+pip list
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
 python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 
