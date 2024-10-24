@@ -28,9 +28,9 @@
 module load python
 module load cuda
 
-source /n/home09/dsprague/.conda/envs/ponce_rotation
+source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/mamba.sh
 
-conda activate ponce_rotation
+mamba activate ponce_rotation
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
 python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 
