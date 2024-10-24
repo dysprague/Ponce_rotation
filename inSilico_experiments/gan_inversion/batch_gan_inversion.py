@@ -59,7 +59,7 @@ if __name__=="__main__":
     
     # invert the image batch
     if gan_name == 'fc6':
-                z_opts, img_opts= GAN_invert(G, ref_img_tsr.cuda(), max_iter=int(max_iter),
+            z_opts, img_opts= GAN_invert(G, ref_img_tsr.cuda(), max_iter=int(max_iter),
                                     print_progress=False, batch_size = ref_img_tsr.shape[0])
     elif gan_name == 'BigGAN':
 
