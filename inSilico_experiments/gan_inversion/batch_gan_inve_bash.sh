@@ -10,6 +10,7 @@
 #SBATCH --array=1-10 # change for batches
 #SBATCH --mail-user=daniel_sprague@fas.harvard.edu
 #SBATCH --output=my_job_output.out
+#SBATCH --error=my_job_error.err
 
 param_list=\
 '--folder_name ambulance
@@ -29,4 +30,4 @@ module load python
 source activate ponce
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
-python3 batch_gan_inversion.py $unit_name
+python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID
