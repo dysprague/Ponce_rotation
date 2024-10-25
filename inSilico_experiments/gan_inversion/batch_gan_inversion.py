@@ -12,6 +12,7 @@ parser.add_argument("--gan_name", type=str, default="fc6", help="GAN model name"
 #parser.add_argument("--folder_name", type=str, default="monkey_grooming", help="name of the folder with the image batch files")
 parser.add_argument("--max_iter", type=int, default=int(5E5), help="Number gradient descent iterations")
 parser.add_argument("--task_id", type=int, default=0, help="task id number")
+#parser.add_argument("--folders", type='str', default=[], help='folders to iterate through' )
 
 save_data_main_root = r"/n/home09/dsprague/data/videos_inverted"
 data_root = r"/n/home09/dsprague/data/video_frames"
@@ -19,7 +20,7 @@ sys.path.append(r"/n/home09/dsprague/Ponce_rotation")
 
 os.makedirs(save_data_main_root, exist_ok=True)
 
-folders = ['ambulance', 'cats_jumping', 'fan', 'horses', 'komodo', 'macaque_eating', 'macaque_running', 'macaque_fighting', 'monkey_grooming', 'soccer_ball']
+folders = ['ambulance', 'cats_jumping', 'fan', 'horses', 'komodo', 'macaque_eating', 'macaque_running', 'monkey_fighting', 'monkey_grooming', 'soccer_ball']
 
 if __name__=="__main__":
     # let get log of the time
