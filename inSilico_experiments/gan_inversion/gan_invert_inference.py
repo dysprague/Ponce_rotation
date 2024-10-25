@@ -31,7 +31,7 @@ def GAN_inf_movies(G, z_init, z_frames, output_dir):
             random_numbers = np.random.uniform(-1, 1, z_init.shape[0])
             rand_update = (random_numbers/np.linalg.norm(random_numbers))*enc_dist
 
-            z_use = z_opt + rand_update
+            z_use = z_opt + torch.from_numpy(rand_update).to("cuda")
 
             img_opt = G.visualize(z_use)
 
