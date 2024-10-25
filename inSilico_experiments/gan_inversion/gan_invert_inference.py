@@ -15,7 +15,7 @@ from torchvision.transforms import ToTensor, ToPILImage, Compose, Resize, ToPILI
 def GAN_inf_movies(G, z_init, z_frames, output_dir):
     # Find the distance between Z[i-1] and Z[i] and then move in a random direction away by that same distance
 
-    z_init = torch.from_numpy(z_init).double()
+    z_init = torch.from_numpy(z_init).float()
 
     z_opt = z_init.clone().detach().requires_grad_(False).to("cuda")
     
@@ -31,7 +31,7 @@ def GAN_inf_movies(G, z_init, z_frames, output_dir):
             random_numbers = np.random.uniform(-1, 1, z_init.shape[0])
             rand_update = (random_numbers/np.linalg.norm(random_numbers))*enc_dist
 
-            z_use = z_opt + torch.from_numpy(rand_update).to("cuda").double()
+            z_use = z_opt + torch.from_numpy(rand_update).to("cuda").float()
 
             img_opt = G.visualize(z_use)
 
