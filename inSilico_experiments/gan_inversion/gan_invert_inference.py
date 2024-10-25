@@ -46,7 +46,7 @@ if __name__ == '__main__':
         if not os.path.isdir(os.path.join(data_path, folder)):
             continue 
 
-        z_frames = [np.load(os.path.join(data_path, folder, file)) for file in os.listdir(os.path.join(data_path, folder)) if file[-4:]=='npy']
+        z_frames = [np.load(os.path.join(data_path, folder, file)) for file in os.listdir(os.path.join(data_path, folder)) if file[-4:]=='.npy']
 
         z_init = z_frames[0]
 
