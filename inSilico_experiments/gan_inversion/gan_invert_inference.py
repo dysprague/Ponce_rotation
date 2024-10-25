@@ -7,16 +7,19 @@ from core.utils.GAN_invert_utils import GAN_invert
 from core.utils.GAN_utils import upconvGAN
 import numpy as np
 
+from PIL import Image
+from torchvision.utils import make_grid
+from torchvision.transforms import ToTensor, ToPILImage, Compose, Resize, ToPILImage, CenterCrop
+
 def GAN_inf_movies(G, z_init, z_frames, output_dir):
     # Find the distance between Z[i-1] and Z[i] and then move in a random direction away by that same distance
 
-    if img_init.device != "cuda":
-        img_init = img_init.cuda() 
+    z_opt = z_init.clone().detach().requires_grad_(False).to("cuda")
     
     for i in range(len(z_frames)):
 
         if i == 0:    
-            z_use = z_init
+            z_use = z_opt
             img_opt = G.visualize(z_use)
 
         else: 
@@ -25,13 +28,15 @@ def GAN_inf_movies(G, z_init, z_frames, output_dir):
             random_numbers = np.random.uniform(-1, 1, z_init.shape[0])
             rand_update = (random_numbers/np.linalg.norm(random_numbers))*enc_dist
 
-            z_use = z_use + rand_update
+            z_use = z_opt + rand_update
 
             img_opt = G.visualize(z_use)
 
+            z_opt = z_use
+
         file_name = f"frame_{i}_inv"
         image_format = "png"
-        img = ToPILImage()(imgs[0])
+        img = ToPILImage()(img_opt)
         img.save(os.path.join(output_dir, f"{file_name}.{image_format}"))
 
         np.save(os.path.join(output_dir, f"{file_name}.npy"), z_use)
