@@ -41,6 +41,9 @@ def GAN_inf_movies(G, z_init, z_frames, output_dir):
         image_format = "png"
         img = ToPILImage()(img_opt[0])
         img.save(os.path.join(output_dir, f"{file_name}.{image_format}"))
+        
+        z_save= z_opt.clonse()
+        z_save = z_save.cpu().detach().numpy()
 
         np.save(os.path.join(output_dir, f"{file_name}.npy"), z_use)
 
