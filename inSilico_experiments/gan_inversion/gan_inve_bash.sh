@@ -8,28 +8,12 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mail-user=daniel_sprague@fas.harvard.edu
-#SBATCH --output=gan_inve_7.out
-#SBATCH --error=gan_inve_7.err
-
-#param_list=\
-#'--folder_name ambulance
-#--folder_name cats_jumping
-#--folder_name fan
-#--folder_name horses 
-#--folder_name komodo 
-#--folder_name macaque_eating 
-#--folder_name macaque_running 
-#--folder_name macaque_fighting
-#--folder_name monkey_grooming 
-#--folder_name soccer_ball
-#'
+#SBATCH --output=output/gan_inf_test.out
+#SBATCH --error=error/gan_inf_test.err
 
 source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/conda.sh
 
 conda activate ponce_rotation
 
-echo "installed packages:"
-pip list
-
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
-python3 batch_gan_inversion.py --task_id 7
+python3 gan_invert_inference.py 
