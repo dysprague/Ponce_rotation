@@ -65,7 +65,7 @@ if __name__=="__main__":
          samples = [f"ILSVRC2012_test_{i:08}.JPEG" for i in np.random.choice(np.arange(25000*task_id+1,25000*task_id+25000+1), size=250, replace=False)]
 
     for sample in samples:
-         shutil.copyfile(os.path.join(full_data_root, sample), data_path)
+         shutil.copyfile(os.path.join(full_data_root, sample), os.path.join(data_path, sample))
             
     
     # load the image batch
