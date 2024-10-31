@@ -60,14 +60,13 @@ if __name__=="__main__":
 
     data_path = os.path.join(data_root, folder_name)
     if not os.path.isdir(data_path):
-         os.makedirs(data_path) 
+        os.makedirs(data_path) 
 
-         samples = [f"ILSVRC2012_test_{i:08}.JPEG" for i in np.random.choice(np.arange(25000*task_id+1,25000*task_id+25000+1), size=250, replace=False)]
+    samples = [f"ILSVRC2012_test_{i:08}.JPEG" for i in np.random.choice(np.arange(25000*task_id+1,25000*task_id+25000+1), size=250, replace=False)]
 
     for sample in samples:
          shutil.copyfile(os.path.join(full_data_root, sample), os.path.join(data_path, sample))
             
-    
     # load the image batch
     img_batch_path = data_path
     ref_img_nms, ref_img_tsr = load_ref_imgs(
