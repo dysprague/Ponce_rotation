@@ -29,22 +29,28 @@ if platform == "linux":  # CHPC cluster
     #load_urls = True
     # ckpt_path = {"vgg16": "/scratch/binxu/torch/vgg16-397923af.pth"}
 else:
-    if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
-        homedir = "D:/Generator_DB_Windows"
-        netsdir = os.path.join(homedir, 'nets')
-    elif os.environ['COMPUTERNAME'] == 'PONCELAB-ML2C':  # PonceLab-Desktop Victoria
-        homedir = r"C:\Users\ponce\Documents\Generator_DB_Windows"
-        netsdir = os.path.join(homedir, 'nets')
-    elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  # Home_WorkStation
-        homedir = "E:/Monkey_Data/Generator_DB_Windows"
-        netsdir = os.path.join(homedir, 'nets')
-    elif os.environ['COMPUTERNAME'] == 'DESKTOP-9LH02U9':  # Home_WorkStation Victoria
-        homedir = "C:/Users/zhanq/OneDrive - Washington University in St. Louis/Generator_DB_Windows"
-        netsdir = os.path.join(homedir, 'nets')
-    else:
-        load_urls = True
-        homedir = os.path.expanduser('~')
-        netsdir = os.path.join(homedir, 'Documents/nets')
+
+    homedir = "/Users/dysprague/Ponce_rotation"
+    netsdir = os.path.join(homedir, 'models')
+
+    
+    #if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
+    #    homedir = "D:/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'PONCELAB-ML2C':  # PonceLab-Desktop Victoria
+    #    homedir = r"C:\Users\ponce\Documents\Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  # Home_WorkStation
+    #    homedir = "E:/Monkey_Data/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'DESKTOP-9LH02U9':  # Home_WorkStation Victoria
+    #    homedir = "C:/Users/zhanq/OneDrive - Washington University in St. Louis/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #else:
+    #    load_urls = True
+    #    homedir = os.path.expanduser('~')
+    #    netsdir = os.path.join(homedir, 'Documents/nets')
+    
 
 model_urls = {"pool5" : "https://onedrive.live.com/download?cid=9CFFF6BCB39F6829&resid=9CFFF6BCB39F6829%2145337&authkey=AFaUAgeoIg0WtmA",
             "fc6": "https://onedrive.live.com/download?cid=9CFFF6BCB39F6829&resid=9CFFF6BCB39F6829%2145339&authkey=AC2rQMt7Obr0Ba4",

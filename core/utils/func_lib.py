@@ -254,6 +254,9 @@ def set_all_center_unit_population_recording(scorer, targetnames, print_info=Tru
     unit_tsridx_dict = {}
     module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cuda", False)
     invmap = {v: k for k, v in module_names.items()}
+    print(module_spec)
+    print(invmap)
+    print(targetnames)
     try:
         for layer in targetnames:
             inshape = module_spec[invmap[layer]]["inshape"]
@@ -274,13 +277,20 @@ def set_all_unit_population_recording(scorer, targetnames, print_info=True):
     """
     unit_mask_dict = {}
     unit_tsridx_dict = {}
-    module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cuda", False)
+    if torch.cuda.is_available():
+        module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cuda", False)
+    else:
+        module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cpu", False)
     invmap = {v: k for k, v in module_names.items()}
+
+    print(module_spec)
+    print(invmap)
+    print(targetnames)
     try:
         for layer in targetnames:
+            print(invmap[layer])
             inshape = module_spec[invmap[layer]]["inshape"]
             outshape = module_spec[invmap[layer]]["outshape"]   
-
             msk = np.ones(outshape, dtype=np.bool)  
             flat_idx_samp = np.where(msk.flatten())[0]
             flat_idx_samp.sort()     

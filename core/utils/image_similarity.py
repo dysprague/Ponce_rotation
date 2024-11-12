@@ -9,7 +9,7 @@ import torch
 import lpips
 
 class TorchImageDistance:
-    # this class clclulates the PIREAD similarity between two images with fidderent merics
+    # this class calculates the PAIRED similarity between two images with different merics
     # The out put is the mean similarity the distance between the two images
 
     def __init__(self):
@@ -71,9 +71,6 @@ class TorchImageDistance:
                                                 scorer, layer_list, print_info=False)
         else:
             raise ValueError('The units_slice is not supported')
-        
-    
-
 
     def get_CCN_distance(self, similarity='cosine', units_slice='center'):
         # this function is used to calculate the similarity between two images batch using the CNN features

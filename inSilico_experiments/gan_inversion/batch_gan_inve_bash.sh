@@ -33,4 +33,4 @@ echo "installed packages:"
 pip list
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
-python3 batch_gan_inversion.py --task_id $SLURM_ARRAY_TASK_ID 
+python3 batch_invert_perturb.py --task_id $SLURM_ARRAY_TASK_ID 

@@ -20,31 +20,43 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
 
-if platform == "linux": # cluster
-    # torchhome = "/scratch/binxu/torch/checkpoints"  # CHPC
+if platform == "linux":  # CHPC cluster
+    import socket
     hostname = socket.gethostname()
     if hostname == "odin":
-        torchhome = join(torch.hub.get_dir(), "checkpoints")
+        torchhome = torch.hub.get_dir()
     elif "ris.wustl.edu" in hostname:
-        scratchdir = os.environ["SCRATCH1"]
-        torchhome = join(scratchdir, "torch/checkpoints")  # RIS
+        homedir = os.path.expanduser('~')
+        netsdir = os.path.join(homedir, 'Generate_DB/nets')
     else:
-        # torchhome = torch.hub._get_torch_home()
-        torchhome = join(torch.hub.get_dir(), "checkpoints")  # torch.hub._get_torch_home()
+        netsdir = r"/n/home09/dsprague/model/GAN"
+        homedir = r"/n/home09/dsprague/Ponce_rotation"
+        torchhome = torch.hub.get_dir()
+    #load_urls = True
+    # ckpt_path = {"vgg16": "/scratch/binxu/torch/vgg16-397923af.pth"}
 else:
-    if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
-        torchhome = r"E:\Cluster_Backup\torch"
-    elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  ## Home_WorkStation
-        torchhome = r"E:\Cluster_Backup\torch"
-    elif os.environ['COMPUTERNAME'] == 'DESKTOP-9LH02U9':  ## Home_WorkStation Victoria
-        torchhome = r"E:\Cluster_Backup\torch"
-    elif os.environ['COMPUTERNAME'] =='PONCELAB-OFF6':
-        torchhome = r"C:\Users\ponce\Documents\torch"
-    elif os.environ['COMPUTERNAME'] =='MNB-PONC-D21160':
-        torchhome = r"C:\Users\Alireza\Documents\models_data\torchhome"    
-    else:
-        # torchhome = torch.hub._get_torch_home()
-        torchhome = torch.hub.get_dir()  # torch.hub._get_torch_home()
+
+    homedir = "/Users/dysprague/Ponce_rotation"
+    netsdir = os.path.join(homedir, 'models')
+    torchhome = torch.hub.get_dir()
+
+    
+    #if os.environ['COMPUTERNAME'] == 'DESKTOP-9DDE2RH':  # PonceLab-Desktop 3
+    #    homedir = "D:/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'PONCELAB-ML2C':  # PonceLab-Desktop Victoria
+    #    homedir = r"C:\Users\ponce\Documents\Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'DESKTOP-MENSD6S':  # Home_WorkStation
+    #    homedir = "E:/Monkey_Data/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #elif os.environ['COMPUTERNAME'] == 'DESKTOP-9LH02U9':  # Home_WorkStation Victoria
+    #    homedir = "C:/Users/zhanq/OneDrive - Washington University in St. Louis/Generator_DB_Windows"
+    #    netsdir = os.path.join(homedir, 'nets')
+    #else:
+    #    load_urls = True
+    #    homedir = os.path.expanduser('~')
+    #    netsdir = os.path.join(homedir, 'Documents/nets')
 
 
 def load_featnet(netname: str):
@@ -124,7 +136,10 @@ class TorchScorer:
                 self.inputsize = (3, imgpix, imgpix)
             elif model_name == "vgg16-face":
                 self.model = models.vgg16(pretrained=False, num_classes=2622)
-                self.model.load_state_dict(torch.load(join(torchhome, "vgg16_face.pt")))
+                if torch.cuda.is_available():
+                    self.model.load_state_dict(torch.load(join(torchhome, "vgg16_face.pt")))
+                else:
+                    self.model.load_state_dict(torch.load(join(torchhome, "vgg16_face.pt"),map_location=torch.device('cpu')))
                 self.layers = list(self.model.features) + list(self.model.classifier)
                 self.layername = None if rawlayername else layername_dict["vgg16"]
                 self.inputsize = (3, imgpix, imgpix)
@@ -155,19 +170,35 @@ class TorchScorer:
                 if "resnet50-face" in model_name:  # resnet trained on vgg-face dataset.
                     self.model = models.resnet50(pretrained=False, num_classes=8631)
                     if model_name == "resnet50-face_ft":
-                        self.model.load_state_dict(torch.load(join(torchhome, "resnet50_ft_weight.pt")))
+                        if torch.cuda.is_available():
+                            self.model.load_state_dict(torch.load(join(torchhome, "resnet50_ft_weight.pt")))
+                        else:
+                            self.model.load_state_dict(torch.load(join(torchhome, "resnet50_ft_weight.pt"), map_location=torch.device('cpu')))
                     elif model_name == "resnet50-face_scratch":
-                        self.model.load_state_dict(torch.load(join(torchhome, "resnet50_scratch_weight.pt")))
+                        if torch.cuda.is_available():
+                            self.model.load_state_dict(torch.load(join(torchhome, "resnet50_scratch_weight.pt")))
+                        else:
+                            self.model.load_state_dict(torch.load(join(torchhome, "resnet50_scratch_weight.pt"), map_location=torch.device('cpu')))
                     else:
                         raise NotImplementedError("Feasible names are resnet50-face_scratch, resnet50-face_ft")
                 else:
                     self.model = models.resnet50(pretrained=True)
                     if model_name in ["resnet50_linf_8", "resnet50_linf8"]:  # robust version of resnet50.
-                        self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps8.pt")))
+                        if torch.cuda.is_available():
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps8.pt")))
+                        else: 
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps8.pt"), map_location=torch.device('cpu')))
                     elif model_name == "resnet50_linf_4":
-                        self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps4.pt")))
+                        if torch.cuda.is_available():
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps4.pt")))
+                        else:
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_linf_eps4.pt"), map_location=torch.device('cpu')))
                     elif model_name == "resnet50_l2_3_0":
-                        self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_l2_eps3.pt")))
+                        if torch.cuda.is_available():
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_l2_eps3.pt")))
+                        else:
+                            self.model.load_state_dict(torch.load(join(torchhome, "pure_resnet50_l2_eps3.pt"), map_location=torch.device('cpu')))
+
                 self.inputsize = (3, imgpix, imgpix)
                 self.layername = None
             elif "resnet50_untrained" in model_name:
@@ -175,14 +206,14 @@ class TorchScorer:
                 self.inputsize = (3, imgpix, imgpix)
                 self.layername = None
             elif model_name == "cornet_s":
-                from cornet import cornet_s
-                Cnet = cornet_s(pretrained=True)
+                import cornet
+                Cnet = cornet.cornet_s(pretrained=True)
                 self.model = Cnet.module
                 self.inputsize = (3, imgpix, imgpix)
                 self.layername = None
             elif model_name == "cornet_untrained":
-                from cornet import cornet_s
-                Cnet = cornet_s(pretrained=False)
+                import cornet
+                Cnet = cornet.cornet_s(pretrained=False)
                 self.model = Cnet.module
                 self.inputsize = (3, imgpix, imgpix)
                 self.layername = None
@@ -202,22 +233,41 @@ class TorchScorer:
                 raise NotImplementedError("Cannot find the specified model %s"%model_name)
         else:
             raise NotImplementedError("model_name need to be either string or nn.Module")
+        
+        if not torch.cuda.is_available():
+            self.model.eval()
+            for param in self.model.parameters():
+                param.requires_grad_(False)
+            # self.preprocess = transforms.Compose([transforms.ToPILImage(),
+            #                                       transforms.Resize(size=(224, 224)),
+            #                                       transforms.ToTensor(),
+            self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                std=[0.229, 0.224, 0.225])  # Imagenet normalization RGB
+            self.RGBmean = torch.tensor([0.485, 0.456, 0.406]).view([1, 3, 1, 1])
+            self.RGBstd = torch.tensor([0.229, 0.224, 0.225]).view([1, 3, 1, 1])
+            self.hooks = []
+            self.artiphys = False
+            self.record_layers = []
+            self.recordings = {}
+            self.activation = {}
 
-        self.model.cuda().eval()
-        for param in self.model.parameters():
-            param.requires_grad_(False)
-        # self.preprocess = transforms.Compose([transforms.ToPILImage(),
-        #                                       transforms.Resize(size=(224, 224)),
-        #                                       transforms.ToTensor(),
-        self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                               std=[0.229, 0.224, 0.225])  # Imagenet normalization RGB
-        self.RGBmean = torch.tensor([0.485, 0.456, 0.406]).view([1, 3, 1, 1]).cuda()
-        self.RGBstd = torch.tensor([0.229, 0.224, 0.225]).view([1, 3, 1, 1]).cuda()
-        self.hooks = []
-        self.artiphys = False
-        self.record_layers = []
-        self.recordings = {}
-        self.activation = {}
+        else:
+
+            self.model.cuda().eval()
+            for param in self.model.parameters():
+                param.requires_grad_(False)
+            # self.preprocess = transforms.Compose([transforms.ToPILImage(),
+            #                                       transforms.Resize(size=(224, 224)),
+            #                                       transforms.ToTensor(),
+            self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                std=[0.229, 0.224, 0.225])  # Imagenet normalization RGB
+            self.RGBmean = torch.tensor([0.485, 0.456, 0.406]).view([1, 3, 1, 1]).cuda()
+            self.RGBstd = torch.tensor([0.229, 0.224, 0.225]).view([1, 3, 1, 1]).cuda()
+            self.hooks = []
+            self.artiphys = False
+            self.record_layers = []
+            self.recordings = {}
+            self.activation = {}
 
     def get_activation(self, name, unit=None, unitmask=None, ingraph=False):
         """
@@ -382,6 +432,7 @@ class TorchScorer:
         """Score in batch will accelerate processing greatly!
         img_tsr is already torch.Tensor
         """
+
         # assume image is using 255 range
         imgn = img_tsr.shape[0]
         scores = np.zeros(img_tsr.shape[0])
@@ -392,15 +443,28 @@ class TorchScorer:
         while csr < imgn:
             csr_end = min(csr + B, imgn)
             img_batch = self.preprocess(img_tsr[csr:csr_end,:,:,:], input_scale=input_scale)
-            with torch.no_grad():
-                self.model(img_batch.cuda())
-            if "score" in self.activation: # if score is not there set trace to zero.
-                scores[csr:csr_end] = self.activation["score"].squeeze().cpu().numpy().squeeze()
+            if torch.cuda.is_available():
+                with torch.no_grad():
+                    self.model(img_batch.cuda())
+    
+                if "score" in self.activation: # if score is not there set trace to zero.
+                    scores[csr:csr_end] = self.activation["score"].squeeze().cpu().numpy().squeeze()
 
-            if self.artiphys:  # record the whole layer's activation
-                for layer in self.record_layers:
-                    score_full = self.activation[layer]
-                    self.recordings[layer].append(score_full.cpu().numpy())
+                if self.artiphys:  # record the whole layer's activation
+                    for layer in self.record_layers:
+                        score_full = self.activation[layer]
+                        self.recordings[layer].append(score_full.cpu().numpy())
+            else:
+                with torch.no_grad():
+                    self.model(img_batch)
+    
+                if "score" in self.activation: # if score is not there set trace to zero.
+                    scores[csr:csr_end] = self.activation["score"].squeeze().numpy().squeeze()
+
+                if self.artiphys:  # record the whole layer's activation
+                    for layer in self.record_layers:
+                        score_full = self.activation[layer]
+                        self.recordings[layer].append(score_full.numpy())
 
             csr = csr_end
         for layer in self.recordings:
