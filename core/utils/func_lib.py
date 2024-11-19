@@ -254,9 +254,7 @@ def set_all_center_unit_population_recording(scorer, targetnames, print_info=Tru
     unit_tsridx_dict = {}
     module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cuda", False)
     invmap = {v: k for k, v in module_names.items()}
-    print(module_spec)
-    print(invmap)
-    print(targetnames)
+
     try:
         for layer in targetnames:
             inshape = module_spec[invmap[layer]]["inshape"]
@@ -283,9 +281,6 @@ def set_all_unit_population_recording(scorer, targetnames, print_info=True):
         module_names, module_types, module_spec = get_module_names(scorer.model, (3,227,227), "cpu", False)
     invmap = {v: k for k, v in module_names.items()}
 
-    print(module_spec)
-    print(invmap)
-    print(targetnames)
     try:
         for layer in targetnames:
             print(invmap[layer])

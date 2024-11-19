@@ -1,0 +1,2 @@
+Warning: skimage.transform is not available. Will use scipy.misc.imresize instead.
+Warning: skimage.transform is not available. Will use scipy.misc.imresize instead.
