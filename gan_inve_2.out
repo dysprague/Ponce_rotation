@@ -1,3 +1,0 @@
-Warning: skimage.transform is not available. Will use scipy.misc.imresize instead.
-Warning: skimage.transform is not available. Will use scipy.misc.imresize instead.
-Video Group3 is processed and saved. everything took 345.94805680513383 minutes
