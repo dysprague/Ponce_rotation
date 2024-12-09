@@ -52,7 +52,7 @@ class TorchImageDistance:
             self.torch_scorer_list.append(scorer)
         print('The CNN scorers are set')
 
-    def __set_ecncoding_slice(self, units_slice): 
+    def __set_encoding_slice(self, units_slice): 
         # clean the memory if the slice is not None and changed
         if (self.curent_slice is not None) and (not(self.curent_slice == units_slice)):
             print(f'The units_slice is changed to {self.curent_slice} so we need to cleanup the memory')
@@ -72,6 +72,28 @@ class TorchImageDistance:
         else:
             raise ValueError('The units_slice is not supported')
 
+    def get_CCN_encoding(self, units_slice = 'center'):
+        
+        if len(self.torch_scorer_list) == 0:
+            self.__set_CNN_scorer_list()
+
+        if not (self.current_slice == units_slice):
+            self.__set_encoding_slice(units_slice)
+
+        encoded_image_batch_list = []
+        for scorer, layer_list in zip(self.torch_scorer_list, self.layers_list):
+            encoded_image_batch, _ = encode_image(scorer, self.first_image_batch, key=layer_list, RFresize=False, cat_layes=False)
+            encoded_image_batch_list.append(encoded_image_batch)
+
+        net_layer_dict = {}
+
+        for i in range(len(self.net_name_list)):
+            net_layer_dict[self.net_name_list[i]] = {}
+            for j in range(len(self.layers_list[0])):
+                net_layer_dict[self.net_name_list[i]][self.layers_list[i][j]] = encoded_image_batch[i][j]
+
+        return net_layer_dict
+
     def get_CCN_distance(self, similarity='cosine', units_slice='center'):
         # this function is used to calculate the similarity between two images batch using the CNN features
         # we consider 4 (or other same number of) convilutional layers from each network to calculate the similarity lock at the set_CNN_scorer_list
@@ -84,7 +106,7 @@ class TorchImageDistance:
             self.__set_CNN_scorer_list()
         
         if not (self.curent_slice == units_slice):
-            self.__set_ecncoding_slice(units_slice)
+            self.__set_encoding_slice(units_slice)
         
         # let encode the images
         encoded_first_image_batch_list = []
