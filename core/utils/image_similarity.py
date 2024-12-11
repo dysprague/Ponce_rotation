@@ -77,20 +77,22 @@ class TorchImageDistance:
         if len(self.torch_scorer_list) == 0:
             self.__set_CNN_scorer_list()
 
-        if not (self.current_slice == units_slice):
+        if not (self.curent_slice == units_slice):
             self.__set_encoding_slice(units_slice)
 
         encoded_image_batch_list = []
         for scorer, layer_list in zip(self.torch_scorer_list, self.layers_list):
             encoded_image_batch, _ = encode_image(scorer, self.first_image_batch, key=layer_list, RFresize=False, cat_layes=False)
             encoded_image_batch_list.append(encoded_image_batch)
+            
+            print(f'encoding for {scorer} finished')
 
         net_layer_dict = {}
 
         for i in range(len(self.net_name_list)):
             net_layer_dict[self.net_name_list[i]] = {}
             for j in range(len(self.layers_list[0])):
-                net_layer_dict[self.net_name_list[i]][self.layers_list[i][j]] = encoded_image_batch[i][j]
+                net_layer_dict[self.net_name_list[i]][self.layers_list[i][j]] = encoded_image_batch_list[i][j]
 
         return net_layer_dict
 
@@ -100,6 +102,8 @@ class TorchImageDistance:
 
         # let check if the batch size is the same
         self.__batch_size_check()
+        
+        print('Batch size checked')
 
         # let set the score list if it is not set
         if len(self.torch_scorer_list) == 0:
@@ -107,6 +111,8 @@ class TorchImageDistance:
         
         if not (self.curent_slice == units_slice):
             self.__set_encoding_slice(units_slice)
+            
+        print('Scorers set')
         
         # let encode the images
         encoded_first_image_batch_list = []
@@ -118,6 +124,8 @@ class TorchImageDistance:
                                             RFresize=False, cat_layes=False)
             encoded_first_image_batch_list.append(encoded_first_image_batch)
             encoded_second_image_batch_list.append(encoded_second_image_batch)
+            
+        print('images encoded')
 
         #return encoded_first_image_batch_list, encoded_second_image_batch_list
         
