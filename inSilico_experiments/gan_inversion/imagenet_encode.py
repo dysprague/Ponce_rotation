@@ -69,7 +69,7 @@ if __name__=="__main__":
     net_layer_dict_list = [] 
     img_nms_list = []
 
-    for i in range(10000/500):
+    for i in range(int(10000/500)):
          
         group_name = f"Group_{str(i)}"
 
