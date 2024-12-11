@@ -16,4 +16,4 @@ source /n/sw/Miniforge3-24.7.1-0/etc/profile.d/conda.sh
 conda activate ponce_rotation
 
 cd /n/home09/dsprague/Ponce_rotation/inSilico_experiments/gan_inversion
-python3 imagenet_inv.py --task_id 0
+python3 imagenet_encode.py 
