@@ -79,8 +79,8 @@ if __name__=="__main__":
         if not os.path.isdir(data_path):
             os.makedirs(data_path)
 
-        for sample in group_samples:
-            shutil.copyfile(os.path.join(full_data_root, sample), os.path.join(data_path, sample))
+            for sample in group_samples:
+                shutil.copyfile(os.path.join(full_data_root, sample), os.path.join(data_path, sample))
    
         net_layer_dict, ref_img_nms = get_activations(data_path, '.JPEG')
 
